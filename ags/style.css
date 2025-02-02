@@ -1,0 +1,32 @@
+@import "./colors.css";
+@import "./vertical-window.css";
+@import "./notification.css";
+@import "./widgets/media/style.css";
+
+window.bar {
+    font-family: "FiraCode Nerd Font";
+    font-size: 16px;
+    background: @base00;
+    color: @base0D;
+    font-weight: bold;
+    border-radius: 10px;
+    opacity: 0.9;
+}
+
+.workspaces button {
+    background: @base00;
+    color: @base0D;
+    font-family: "FiraCode Nerd Font";
+    border-width: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.workspaces button.focused {
+    font-family: "FiraCode Nerd Font";
+    border-bottom: 2px solid @base02;
+}
+
+.app-item:focused {
+    background: @base00;
+}

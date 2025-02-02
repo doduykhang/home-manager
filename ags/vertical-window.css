@@ -1,0 +1,10 @@
+@import "./colors.css";
+
+window.vertical-bar {
+    font-family: "FiraCode Nerd Font";
+    font-size: 16px;
+    background: @base00;
+    color: @base0D;
+    font-weight: bold;
+    border-radius: 10px;
+}
