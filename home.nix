@@ -22,70 +22,113 @@
    chromium
    ags
    kubectl
+   bruno
+   redisinsight
    lens
+   grim
+   slurp
+   ngrok
    (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
    nerd-fonts.jetbrains-mono
    nerd-fonts.fira-code
+   wl-clipboard
    swww
    lazygit
+   nest-cli
+   doctl
+   google-chrome
+   blueman
+   pavucontrol
+   htop
+   gopls
+   dig
+   gnumake42
+   go-migrate
+   protobuf
+   protoc-gen-go
+   protoc-gen-go-grpc
+   yarn
+   rclone
+   mongodb-compass
+   insomnia
+   terraform
+   usbutils
+   ibus
+   ibus-engines.bamboo
+   pritunl-client
+   flutter
+   jdk11
+   android-tools
+   android-studio
+   air
+   k6
+   qmk
+   unzip
   ];
 
-  #hyprland
   wayland.windowManager.hyprland.extraConfig = ''
   '';
 
-  wayland.windowManager.hyprland.settings = {
-    "$mod" = "SUPER";
+  home.file.".config/ibus/config".text = ''
+    [engine]
+    default=VietnameseBamboo
+    [preload]
+    engines=VietnameseBamboo
+  '';
 
-    exec-once = [
-     "waybar"
-     "swww init"
-    ];
-
-    general = {
-     border_size = "2";
-    };
- 
-    decoration = {
-     inactive_opacity = "0.900000";
-     active_opacity = "0.900000";
-     rounding = "10";
-    };
- 
-    input = {
-     kb_options = "caps:swapescape";
-    };
-
-    monitor = ",highres,auto,1";
-
-    bind =
-      [
-        "$mod, RETURN, exec, kitty --single-instance"
-        "$mod, C, killactive"
-        "$mod, O, exec, wofi --show drun"
-        "$mod, TAB, fullscreen, 1"
-        "SUPER_SHIFT, Q, exit"
-        "$mod, P, exec, grim -g \"\${slurp}\" - | wl-copy"
-      ]
-      ++ (
-        # workspaces
-        # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
-        builtins.concatLists (builtins.genList (i:
-            let ws = i + 1;
-            in [
-              "$mod, code:1${toString i}, workspace, ${toString ws}"
-              "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
-            ]
-          )
-          9)
-      );
-  };
+  # wayland.windowManager.hyprland.settings = {
+  #   "$mod" = "SUPER";
+  #
+  #   exec-once = [
+  #    "waybar"
+  #    "swww init"
+  #   ];
+  #
+  #   general = {
+  #    border_size = "2";
+  #   };
+  #
+  #   decoration = {
+  #    inactive_opacity = "0.900000";
+  #    active_opacity = "0.900000";
+  #    rounding = "10";
+  #   };
+  #
+  #   input = {
+  #    kb_options = "caps:swapescape";
+  #   };
+  #
+  #   monitor = ",highres,auto,1";
+  #
+  #   bind =
+  #     [
+  #       "$mod, RETURN, exec, kitty --single-instance"
+  #       "$mod, C, killactive"
+  #       "$mod, O, exec, wofi --show drun"
+  #       "$mod, TAB, fullscreen, 1"
+  #       "SUPER_SHIFT, Q, exit"
+  #       "$mod, P, exec, grim -g \"\${slurp}\" - | wl-copy"
+  #     ]
+  #     ++ (
+  #       # workspaces
+  #       # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
+  #       builtins.concatLists (builtins.genList (i:
+  #           let ws = i + 1;
+  #           in [
+  #             "$mod, code:1${toString i}, workspace, ${toString ws}"
+  #             "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
+  #           ]
+  #         )
+  #         9)
+  #     );
+  # };
 
   home.file = {
     ".config/hypr/hyprland.conf".text = ''
 
    exec-once=ags
     exec-once=swww-daemon && swww img ~/.config/home-manager/flatppuccin_4k_macchiato.png
+    exec-once = ibus-daemon -drx
 
 $mod=SUPER
 
@@ -164,6 +207,10 @@ monitor=,highres,auto,1
 
   home.sessionVariables = {
     EDITOR = "nvim";
+    GTK_IM_MODULE = "ibus";
+    QT_IM_MODULE = "ibus";
+    XMODIFIERS = "@im=ibus";
+    IBUS_ENABLE_SYNC_MODE = "1";
   };
 
   # Let Home Manager install and manage itself.
@@ -199,6 +246,11 @@ monitor=,highres,auto,1
 		telescope-nvim
 		plenary-nvim
 
+        avante-nvim
+        kulala-nvim
+
+        luasnip
+
 		(nvim-treesitter.withPlugins (p: [
 			p.tree-sitter-nix
 			p.tree-sitter-vim
@@ -206,6 +258,8 @@ monitor=,highres,auto,1
 			p.tree-sitter-lua
 			p.tree-sitter-python
 			p.tree-sitter-json
+			p.tree-sitter-vue
+            p.tree-sitter-javascript
 		]))
 
 		lazygit-nvim
@@ -225,6 +279,9 @@ monitor=,highres,auto,1
 		${builtins.readFile ./nvim/plugins/telescope.lua}
 		${builtins.readFile ./nvim/plugins/treesitter.lua}
 		${builtins.readFile ./nvim/plugins/neo-tree.lua}
+		${builtins.readFile ./nvim/plugins/lsp.lua}
+		${builtins.readFile ./nvim/plugins/avante.lua}
+		${builtins.readFile ./nvim/plugins/kulala.lua}
 	'';
   };
 
@@ -278,7 +335,13 @@ monitor=,highres,auto,1
         ".." = "cd ..";
         "cd" = "z";
     };
+    initExtra = ''
+      export ANDROID_HOME=${pkgs.android-tools}/share/android-sdk
+      export ANDROID_SDK_ROOT=${pkgs.android-tools}/share/android-sdk
+      export JAVA_HOME=${pkgs.jdk11}
+    '';
   };
+
 
   programs.kitty = {
     enable = true; 
@@ -476,15 +539,15 @@ window {
   };
 
   #firefox
-  programs.firefox = {
-    enable = true;
-    profiles.khang = {
-        extensions = with inputs.firefox-addons.packages."x86_64-linux"; [
-            bitwarden
-            ublock-origin
-            darkreader
-            vimium
-        ];
-    };
-  };
+  #programs.firefox = {
+  #  enable = true;
+  #  profiles.khang = {
+  #      extensions = with inputs.firefox-addons.packages."x86_64-linux"; [
+  #          bitwarden
+  #          ublock-origin
+  #          darkreader
+  #          vimium
+  #      ];
+  #  };
+  #};
 }
