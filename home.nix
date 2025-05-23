@@ -13,6 +13,7 @@
    go
    python312
    python312Packages.venvShellHook
+   python312Packages.django
    pgadmin4-desktopmode
    vim 
    lf
@@ -29,8 +30,6 @@
    slurp
    ngrok
    (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
-   nerd-fonts.jetbrains-mono
-   nerd-fonts.fira-code
    wl-clipboard
    swww
    lazygit
@@ -55,7 +54,6 @@
    usbutils
    ibus
    ibus-engines.bamboo
-   pritunl-client
    flutter
    jdk11
    android-tools
@@ -64,7 +62,10 @@
    k6
    qmk
    unzip
+   firebase-tools
+   inputs.zen-browser.packages."${system}".default
   ];
+
 
   wayland.windowManager.hyprland.extraConfig = ''
   '';
@@ -251,6 +252,8 @@ monitor=,highres,auto,1
 
         luasnip
 
+        copilot-lua
+
 		(nvim-treesitter.withPlugins (p: [
 			p.tree-sitter-nix
 			p.tree-sitter-vim
@@ -282,6 +285,7 @@ monitor=,highres,auto,1
 		${builtins.readFile ./nvim/plugins/lsp.lua}
 		${builtins.readFile ./nvim/plugins/avante.lua}
 		${builtins.readFile ./nvim/plugins/kulala.lua}
+		${builtins.readFile ./nvim/plugins/copilot.lua}
 	'';
   };
 
