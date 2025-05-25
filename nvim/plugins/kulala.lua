@@ -1,4 +1,3 @@
-print("kulala")
 require("kulala").setup({
     keys = {
       { "<leader>Rs", desc = "Send request" },

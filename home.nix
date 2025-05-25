@@ -1,5 +1,16 @@
 { config, pkgs, inputs, ... }:
 
+let
+  kulala = pkgs.vimUtils.buildVimPlugin {
+    name = "kulala";
+    src = pkgs.fetchFromGitHub {
+      owner = "mistweaverco";
+      repo = "kulala.nvim";
+      rev = "v5.2.1"; # Replace with the specific commit or tag
+      sha256 = "1vh3v5j7avqsmd259w4nga77sq4zs157lmjih0jvq9ghs893cc4i"; # Replace with the correct hash
+    };
+  };
+in 
 {
   home.username = "khang";
   home.homeDirectory = "/home/khang";
@@ -64,6 +75,8 @@
    k6
    qmk
    unzip
+   pulsemixer
+   firebase-tools
   ];
 
   wayland.windowManager.hyprland.extraConfig = ''
@@ -268,6 +281,7 @@ monitor=,highres,auto,1
 		catppuccin-nvim 
 
         vim-tmux-navigator
+        kulala
 	];
 
 	extraLuaConfig = ''
