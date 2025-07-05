@@ -76,6 +76,11 @@ in
    pulsemixer
    firebase-tools
    inputs.zen-browser.packages."${system}".default
+   kustomize_4
+   zip
+   pnpm
+   scrcpy
+   redis
   ];
 
 
@@ -150,8 +155,6 @@ general {
 }
 
 decoration {
-  inactive_opacity=0.900000
-  active_opacity=0.900000
   rounding=10
 }
 
